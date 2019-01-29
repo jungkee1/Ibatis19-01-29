@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+<typeAlias alias ="avo" type="com.address.model.AddressVO"/> <!-- 밑에 parameterClass에 원래 경로(parameterClass="com.address.model.AddressVO") 들어가야하는데 이렇게해서 변수화 시켜서 짧게 씀  -->
+<!--insert  -->															<!--즉 ##들이 들어 객체의 형식 vo는 위치를 씀   -->
+<insert id="insertData" parameterClass="avo">
+insert into addressdb values(addressdb_seq.nextval,#name#,#addr#,#zipcode#,#tel# ) <!-- 물음표 대신에 ## 해서 사용  -->
+</insert>
+
+
+<!--all select  -->
+<select id ="listData" resultClass="avo"> <!--vo.setName(rs.getString("name")) 을 그냥 저렇게 정해주기만 하면 알아서 다 들어감 대신 멤버변수와 데이터베이스 컬럼명이 일치해야함 -->
+select * from addressdb							<!--resultCalss랑 parameterClass는 다른 것이니 잘 구분하자.  -->
+</select>
+
+<!--count  -->
+<select id ="countData" resultClass="Integer"> <!--resultClass 는 말그대로 result return 되어지는 변수의 형을 적어주는 곳  -->
+select count(*) from addressdb
+</select>
+
+<!--상세보기  -->
+<select id="viewData" resultClass="avo" parameterClass="Integer">
+select * from addressdb where num = #number# <!-- 세미클론 하지마세요  -->
+</select>
+
+<!--update  -->
+<update id="updateData" parameterClass="avo">
+update addressdb set Name = #name#, addr = #addr#, tel = #tel#, zipcode = #zipcode#  where num = #num#
+</update>
+
+<!--우편번호 검색  -->
+<select id="zipData" parameterClass="String" resultClass="com.address.model.ZipcodeVO" >
+<!-- select * from zipcode where dong like  '%'||#dong#||'%'  --> <!--#이 문자열을 처리하므로 ''를 포함하고있음 그래서 말 잇는 연산자를 써서 처리  -->
+select * from zipcode where dong like '%$dong$%' <!--이걸로도 해볼 것 (윗줄이랑 같음)  -->
+</select>
+
+<!--delete  -->
+<delete id="deleteData" parameterClass="Integer">
+delete addressdb where num =#num#
+</delete>
+
+<!-- search  -->
+<select id="searchData" parameterClass="java.util.Map" resultClass="avo">
+select * from addressdb where
+<isEqual property="field" compareValue="name">  <!-- if 문 같은거임 field가 name이라면  -->
+	name like '%'||#word#||'%'
+</isEqual>
+<isEqual property="field" compareValue="tel">	<!-- field tel 이라면  -->
+	tel like '%'||#word#||'%'
+</isEqual>
+</select>
+
+
+
+</sqlMap>

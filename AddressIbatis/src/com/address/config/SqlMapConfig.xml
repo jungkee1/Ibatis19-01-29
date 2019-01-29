@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+    
+    <sqlMapConfig>
+    <transactionManager type="JDBC" commitRequired="false">
+    <dataSource type="SIMPLE">
+	    <property name ="JDBC.Driver" value="oracle.jdbc.driver.OracleDriver" />
+	    <property name ="JDBC.ConnectionURL" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	    <property name="JDBC.Username" value="scott"/>
+	    <property name="JDBC.Password" value="TIGER"/>
+    </dataSource>
+    </transactionManager>
+    <sqlMap resource="com/address/config/addrSql.xml"/> <!--addrSql이랑 연결하는걸 끝나기전에 해줘야함 그래야 sql문 실행 가능(풀네임 쓸것)  -->
+    
+    
+    </sqlMapConfig>
